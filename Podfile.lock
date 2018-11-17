@@ -1,0 +1,25 @@
+PODS:
+  - FeedKit (8.0.0)
+  - Kingfisher (4.10.1)
+  - RxAtomic (4.4.0)
+  - RxCocoa (4.4.0):
+    - RxSwift (~> 4.0)
+  - RxSwift (4.4.0):
+    - RxAtomic (~> 4.4)
+
+DEPENDENCIES:
+  - FeedKit
+  - Kingfisher
+  - RxCocoa
+  - RxSwift
+
+SPEC CHECKSUMS:
+  FeedKit: 4a78f07adf7f0a224b904014678f1de82a7ffc21
+  Kingfisher: c148cd7b47ebde9989f6bc7c27dcaa79d81279a0
+  RxAtomic: eacf60db868c96bfd63320e28619fe29c179656f
+  RxCocoa: df63ebf7b9a70d6b4eeea407ed5dd4efc8979749
+  RxSwift: 5976ecd04fc2fefd648827c23de5e11157faa973
+
+PODFILE CHECKSUM: d53a14ec24691b045f6a4b1e61220854e88f57b6
+
+COCOAPODS: 1.4.0
