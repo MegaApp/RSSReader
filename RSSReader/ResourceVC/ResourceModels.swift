@@ -41,7 +41,7 @@ enum Resource {
         }
     }
     
-    enum Error {
+    enum Errors {
         struct Response {
             let message: String
         }

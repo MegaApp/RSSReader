@@ -14,7 +14,7 @@ import UIKit
 
 protocol ResourcePresentationLogic {
     func presentRssResource(response: Resource.RssResource.Response)
-    func presentError(response: Resource.Error.Response)
+    func presentError(response: Resource.Errors.Response)
     func presentRssResources(response: Resource.RssResources.Response)
 }
 
@@ -22,8 +22,8 @@ class ResourcePresenter: ResourcePresentationLogic {
 
     weak var viewController: ResourceDisplayLogic?
     
-    func presentError(response: Resource.Error.Response) {
-        let viewModel = Resource.Error.ViewModel(message: response.message)
+    func presentError(response: Resource.Errors.Response) {
+        let viewModel = Resource.Errors.ViewModel(message: response.message)
         viewController?.displayError(viewModel: viewModel)
     }
     

@@ -29,7 +29,9 @@ class ResourceAPIWorker {
                     observer.onNext(response)
                     observer.on(.completed)
                 } else {
-                    
+                    let error = NSError.init(domain: "There is no name in this channel.", code: 2, userInfo: nil)
+                    observer.onError(error)
+                    observer.onCompleted()
                 }
             }
             return Disposables.create()

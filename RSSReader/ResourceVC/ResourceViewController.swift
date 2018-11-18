@@ -16,7 +16,7 @@ import Kingfisher
 protocol ResourceDisplayLogic: class {
     func displayRssResource(viewModel: Resource.RssResource.ViewModel)
     func displayRssResources(viewModel: [Resource.RssResource.ViewModel])
-    func displayError(viewModel: Resource.Error.ViewModel)
+    func displayError(viewModel: Resource.Errors.ViewModel)
 }
 
 class ResourceViewController: UITableViewController, ResourceDisplayLogic {
@@ -26,6 +26,8 @@ class ResourceViewController: UITableViewController, ResourceDisplayLogic {
     var router: (NSObjectProtocol & ResourceRoutingLogic & ResourceDataPassing)?
     
     @IBOutlet weak var textField: UITextField!
+    @IBOutlet weak var indicator: UIActivityIndicatorView!
+    @IBOutlet weak var addButton: UIButton!
     
     // MARK: Object lifecycle
     
@@ -72,9 +74,10 @@ class ResourceViewController: UITableViewController, ResourceDisplayLogic {
         interactor?.getAllResources()
     }
     
-    @IBAction func addButton(_ sender: Any) {
+    @IBAction func addButton(_ sender: UIButton) {
+        addButton.isHidden = true
+        indicator.startAnimating()
         let request = Resource.RssResource.Request(urlString: textField.text ?? "", title: "", logoUrlString: "")
-        textField.text = nil
         interactor?.addRssResource(request: request)
     }
     
@@ -84,11 +87,16 @@ class ResourceViewController: UITableViewController, ResourceDisplayLogic {
     }
     
     func displayRssResource(viewModel: Resource.RssResource.ViewModel) {
+        indicator.stopAnimating()
+        addButton.isHidden = false
+        textField.text = nil
         resources.insert(viewModel, at: 0)
         tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .bottom)
     }
     
-    func displayError(viewModel: Resource.Error.ViewModel) {
+    func displayError(viewModel: Resource.Errors.ViewModel) {
+        indicator.stopAnimating()
+        addButton.isHidden = false
         let alert = UIAlertController(title: "Ошибка", message: viewModel.message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
         present(alert, animated: true, completion: nil)
@@ -97,7 +105,7 @@ class ResourceViewController: UITableViewController, ResourceDisplayLogic {
 
 extension ResourceViewController {
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return "Каналы"
+        return resources.count > 0 ? "Источники" : nil
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -110,11 +118,11 @@ extension ResourceViewController {
         cell.textLabel?.text = resource.title
         if let urlString = resource.logoUrl,
             let url = URL(string: urlString) {
-            let avatarResource = ImageResource(downloadURL: url)
-            let processor = ResizingImageProcessor(referenceSize: cell.imageView!.frame.size, mode: .aspectFill)
-            cell.imageView?.kf.setImage(with: avatarResource, placeholder: Image(named: "ic_rss"), options: [.processor(processor)])
+            let imageResource = ImageResource(downloadURL: url)
+            let processor = ResizingImageProcessor(referenceSize: CGSize(width: 39, height: 39), mode: .aspectFit)
+            cell.imageView?.kf.setImage(with: imageResource, placeholder: Image(named: "ic_rss")?.withRenderingMode(.alwaysTemplate), options: [.processor(processor)])
         } else {
-            cell.imageView?.image = Image(named: "ic_rss")
+            cell.imageView?.image = Image(named: "ic_rss")?.withRenderingMode(.alwaysTemplate)
         }
         return cell
     }

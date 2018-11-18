@@ -15,7 +15,7 @@ import FeedKit
 
 protocol MainDisplayLogic: class {
     func displayFeeds(viewModel: Main.Feed.ViewModel)
-    func displayError(viewModel: Main.Error.ViewModel)
+    func displayError(viewModel: Main.Errors.ViewModel)
     func deleteFeeds(viewModel: Main.Feed.Delete)
 }
 
@@ -66,20 +66,39 @@ class MainViewController: UITableViewController, MainDisplayLogic {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        refreshControl = UIRefreshControl()
+        refreshControl?.addTarget(self, action: #selector(handleRefresh(refreshControl:)), for: UIControl.Event.valueChanged)
+        tableView.refreshControl = refreshControl
+        tableView.separatorStyle = .none
+        tableView.estimatedRowHeight = 314
+        tableView.rowHeight = UITableView.automaticDimension
+        
+        if #available(iOS 11.0, *) {
+            self.navigationController?.navigationBar.prefersLargeTitles = true
+        }
+        getFeeds()
+    }
+    
+    @objc func handleRefresh(refreshControl: UIRefreshControl){
         getFeeds()
     }
     
     func getFeeds() {
+        refreshControl?.beginRefreshing()
+        feeds.removeAll()
+        tableView.reloadData()
         interactor?.getFeeds()
     }
     
-    func displayError(viewModel: Main.Error.ViewModel) {
+    func displayError(viewModel: Main.Errors.ViewModel) {
+        refreshControl?.endRefreshing()
         let alert = UIAlertController(title: "Ошибка", message: viewModel.message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
         present(alert, animated: true, completion: nil)
     }
     
     func displayFeeds(viewModel: Main.Feed.ViewModel) {
+        refreshControl?.endRefreshing()
         feeds.insert(viewModel.rssFeed, at: 0)
         self.tableView.insertSections([0], with: .top)
     }
@@ -107,9 +126,8 @@ extension MainViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = feeds[indexPath.section].items?[indexPath.item].title
-        cell.detailTextLabel?.text = feeds[indexPath.section].items?[indexPath.item].description
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! MainTableViewCell
+        cell.update(item: feeds[indexPath.section].items?[indexPath.item])
         return cell
     }
 }

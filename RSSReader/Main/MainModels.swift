@@ -33,7 +33,7 @@ enum Main {
         }
     }
     
-    enum Error {
+    enum Errors {
         struct Response {
             let message: String
         }

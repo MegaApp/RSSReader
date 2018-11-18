@@ -23,6 +23,7 @@
 		7E38D2EB219FD74700CEED6B /* ResourceAPIWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E38D2EA219FD74700CEED6B /* ResourceAPIWorker.swift */; };
 		7E38D32C21A06F5000CEED6B /* ResourceCoreDataWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E38D32B21A06F5000CEED6B /* ResourceCoreDataWorker.swift */; };
 		7E38D33121A154AE00CEED6B /* MainCoreDataWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E38D33021A154AE00CEED6B /* MainCoreDataWorker.swift */; };
+		7E38D33521A1EB3D00CEED6B /* MainTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E38D33421A1EB3D00CEED6B /* MainTableViewCell.swift */; };
 		7EBB3AEF219DA57800809E2D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EBB3AEE219DA57800809E2D /* AppDelegate.swift */; };
 		7EBB3AF1219DA57800809E2D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EBB3AF0219DA57800809E2D /* ViewController.swift */; };
 		7EBB3AF4219DA57800809E2D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7EBB3AF2219DA57800809E2D /* Main.storyboard */; };
@@ -71,6 +72,7 @@
 		7E38D2EA219FD74700CEED6B /* ResourceAPIWorker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResourceAPIWorker.swift; sourceTree = "<group>"; };
 		7E38D32B21A06F5000CEED6B /* ResourceCoreDataWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourceCoreDataWorker.swift; sourceTree = "<group>"; };
 		7E38D33021A154AE00CEED6B /* MainCoreDataWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCoreDataWorker.swift; sourceTree = "<group>"; };
+		7E38D33421A1EB3D00CEED6B /* MainTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTableViewCell.swift; sourceTree = "<group>"; };
 		7EBB3AEB219DA57800809E2D /* RSSReader.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RSSReader.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7EBB3AEE219DA57800809E2D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7EBB3AF0219DA57800809E2D /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -142,6 +144,7 @@
 				7E38D2C9219F248F00CEED6B /* MainViewController.swift */,
 				7E38D2CA219F248F00CEED6B /* MainInteractor.swift */,
 				7E38D33021A154AE00CEED6B /* MainCoreDataWorker.swift */,
+				7E38D33421A1EB3D00CEED6B /* MainTableViewCell.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -542,6 +545,7 @@
 				7E38D2CB219F248F00CEED6B /* MainPresenter.swift in Sources */,
 				7E38D2D0219F248F00CEED6B /* MainInteractor.swift in Sources */,
 				7E38D2CE219F248F00CEED6B /* MainModels.swift in Sources */,
+				7E38D33521A1EB3D00CEED6B /* MainTableViewCell.swift in Sources */,
 				7E38D2E9219FD39300CEED6B /* ResourceInteractor.swift in Sources */,
 				7E38D2E4219FD39300CEED6B /* ResourceModels.swift in Sources */,
 				7E38D32C21A06F5000CEED6B /* ResourceCoreDataWorker.swift in Sources */,

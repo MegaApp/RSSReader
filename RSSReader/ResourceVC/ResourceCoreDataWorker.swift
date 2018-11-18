@@ -34,7 +34,9 @@ class ResourceCoreDataWorker {
                     observer.onCompleted()
                 }
             } else {
-                
+                let error = NSError.init(domain: "AppDelegate not found", code: 1, userInfo: nil)
+                observer.onError(error)
+                observer.onCompleted()
             }
             return Disposables.create()
         }.subscribeOn(ConcurrentDispatchQueueScheduler(qos: .utility))
@@ -55,7 +57,9 @@ class ResourceCoreDataWorker {
                     observer.onCompleted()
                 }
             } else {
-                
+                let error = NSError.init(domain: "AppDelegate not found", code: 1, userInfo: nil)
+                observer.onError(error)
+                observer.onCompleted()
             }
             return Disposables.create()
         }.subscribeOn(ConcurrentDispatchQueueScheduler(qos: .utility))
@@ -86,7 +90,9 @@ class ResourceCoreDataWorker {
                     observer.onCompleted()
                 }
             } else {
-                
+                let error = NSError.init(domain: "AppDelegate not found", code: 1, userInfo: nil)
+                observer.onError(error)
+                observer.onCompleted()
             }
             return Disposables.create()
         }.subscribeOn(ConcurrentDispatchQueueScheduler(qos: .utility))

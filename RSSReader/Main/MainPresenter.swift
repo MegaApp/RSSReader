@@ -14,7 +14,7 @@ import UIKit
 
 protocol MainPresentationLogic {
     func presentFeeds(response: Main.Feed.Response)
-    func presentError(response: Main.Error.Response)
+    func presentError(response: Main.Errors.Response)
     func deleteFeeds(response: Main.Feed.Delete)
 }
 
@@ -27,8 +27,8 @@ class MainPresenter: MainPresentationLogic {
         viewController?.displayFeeds(viewModel: viewModel)
     }
     
-    func presentError(response: Main.Error.Response) {
-        let viewModel = Main.Error.ViewModel(message: response.message)
+    func presentError(response: Main.Errors.Response) {
+        let viewModel = Main.Errors.ViewModel(message: response.message)
         viewController?.displayError(viewModel: viewModel)
     }
     

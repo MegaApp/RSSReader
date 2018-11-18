@@ -43,7 +43,7 @@ class MainInteractor: MainBusinessLogic, MainDataStore {
                 let response = Main.Feed.Response(feed: rssFeed)
                 self.presenter?.presentFeeds(response: response)
             }, onError: {error in
-                let response = Main.Error.Response(message: error.localizedDescription)
+                let response = Main.Errors.Response(message: error.localizedDescription)
                 self.presenter?.presentError(response: response)
             })
             .disposed(by: disposeBag)
@@ -66,7 +66,7 @@ class MainInteractor: MainBusinessLogic, MainDataStore {
                     }
                 }
             }, onError: { error in
-                let response = Main.Error.Response(message: error.localizedDescription)
+                let response = Main.Errors.Response(message: error.localizedDescription)
                 self.presenter?.presentError(response: response)
             })
             .disposed(by: disposeBag)
