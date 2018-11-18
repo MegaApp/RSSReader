@@ -14,22 +14,32 @@ import UIKit
 
 protocol ResourcePresentationLogic {
     func presentRssResource(response: Resource.RssResource.Response)
-    func presentError(response: Resource.RssResource.Response)
+    func presentError(response: Resource.Error.Response)
+    func presentRssResources(response: Resource.RssResources.Response)
 }
 
 class ResourcePresenter: ResourcePresentationLogic {
-    
+
     weak var viewController: ResourceDisplayLogic?
     
-    // MARK: Do something
-    
-    func presentError(response: Resource.RssResource.Response) {
-        let viewModel = Resource.RssResource.ViewModel(title: response.title, logoUrl: response.logoUrl, urlString: response.url, error: response.error)
+    func presentError(response: Resource.Error.Response) {
+        let viewModel = Resource.Error.ViewModel(message: response.message)
         viewController?.displayError(viewModel: viewModel)
     }
     
     func presentRssResource(response: Resource.RssResource.Response) {
-        let viewModel = Resource.RssResource.ViewModel(title: response.title, logoUrl: response.logoUrl, urlString: response.url, error: response.error)
+        let viewModel = Resource.RssResource.ViewModel(title: response.title, logoUrl: response.logoUrl, urlString: response.url)
         viewController?.displayRssResource(viewModel: viewModel)
+    }
+    
+    func presentRssResources(response: Resource.RssResources.Response) {
+        var viewModel = [Resource.RssResource.ViewModel]()
+        for rssChannel in response.rssChannels {
+            if let title = rssChannel.name,
+                let url = rssChannel.url {
+                viewModel.append(Resource.RssResource.ViewModel(title: title, logoUrl: rssChannel.logo_url, urlString: url))
+            }
+        }
+        viewController?.displayRssResources(viewModel: viewModel)
     }
 }

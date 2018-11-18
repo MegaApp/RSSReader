@@ -13,25 +13,41 @@
 import UIKit
 
 enum Resource {
-    // MARK: Use cases
-    
     enum RssResource {
         struct Request {
             let urlString: String
-            let name: String
+            let title: String
             let logoUrlString: String?
         }
         struct Response {
-            var url: String
-            var title: String
-            var logoUrl: URL?
-            var error: String?
+            let url: String
+            let title: String
+            let logoUrl: String?
         }
         struct ViewModel {
             let title: String
-            let logoUrl: URL?
+            let logoUrl: String?
             let urlString: String
-            let error: String?
+        }
+    }
+    
+    enum RssResources {
+        struct Response {
+            let rssChannels: [RSSChannel]
+        }
+        
+        struct ViewModel {
+            let rssChannels: [Resource.RssResource.ViewModel]
+        }
+    }
+    
+    enum Error {
+        struct Response {
+            let message: String
+        }
+        
+        struct ViewModel {
+            let message: String
         }
     }
 }

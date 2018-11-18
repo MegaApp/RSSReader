@@ -33,13 +33,18 @@ class ResourceInteractor: ResourceBusinessLogic, ResourceDataStore {
     var apiWorker: ResourceAPIWorker?
     var coreDataWorker: ResourceCoreDataWorker?
     
-    // MARK: Do something
-    
     func getAllResources() {
         coreDataWorker = ResourceCoreDataWorker()
-        coreDataWorker?.getAllRSSChannels().map({ resources in
-            
-        })
+        coreDataWorker?.getAllRSSChannels()
+            .observeOn(MainScheduler.instance)
+            .subscribe(onNext: { channels in
+                let response = Resource.RssResources.Response(rssChannels: channels)
+                self.presenter?.presentRssResources(response: response)
+            }, onError: { error in
+                let response = Resource.Error.Response(message: error.localizedDescription)
+                self.presenter?.presentError(response: response)
+            })
+            .disposed(by: disposeBag)
     }
     
     func deleteRssResource(request: Resource.RssResource.Request) {
@@ -50,7 +55,7 @@ class ResourceInteractor: ResourceBusinessLogic, ResourceDataStore {
                 let mainRequest = Main.Feed.Request(url: URL(string: url)!)
                 self.mainDelegate?.deleteFeeds(request: mainRequest)
             }, onError: { error in
-                let response = Resource.RssResource.Response(url: "", title: "", logoUrl: nil, error: error.localizedDescription)
+                let response = Resource.Error.Response(message: error.localizedDescription)
                 self.presenter?.presentError(response: response)
             })
             .disposed(by: disposeBag)
@@ -60,22 +65,23 @@ class ResourceInteractor: ResourceBusinessLogic, ResourceDataStore {
         apiWorker = ResourceAPIWorker()
         coreDataWorker = ResourceCoreDataWorker()
         guard let url = URL(string: request.urlString) else {
-            let response = Resource.RssResource.Response(url: "", title: "", logoUrl: nil, error: "Не правельный адрес")
+            let response = Resource.Error.Response(message: "Не правельный адрес")
             self.presenter?.presentError(response: response)
             return
         }
         apiWorker?.chackRssResource(url: url)
             .observeOn(MainScheduler.instance)
             .flatMap({response  -> Observable<Resource.RssResource.Response> in
-                let request = Resource.RssResource.Request(urlString: response.url, name: response.title, logoUrlString: response.logoUrl?.absoluteString)
+                let request = Resource.RssResource.Request(urlString: response.url, title: response.title, logoUrlString: response.logoUrl)
                 return self.coreDataWorker!.addChannel(channel: request)
             })
+            .observeOn(MainScheduler.instance)
             .subscribe(onNext: { response in
                 self.presenter?.presentRssResource(response: response)
                 let mainRequest = Main.Feed.Request(url: URL(string: response.url)!)
                 self.mainDelegate?.getFeeds(request: mainRequest)
             }, onError: { error in
-                let response = Resource.RssResource.Response(url: "", title: "", logoUrl: nil, error: error.localizedDescription)
+                let response = Resource.Error.Response(message: error.localizedDescription)
                 self.presenter?.presentError(response: response)
             })
             .disposed(by: disposeBag)

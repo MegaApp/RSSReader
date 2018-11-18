@@ -15,8 +15,8 @@ import FeedKit
 
 protocol MainDisplayLogic: class {
     func displayFeeds(viewModel: Main.Feed.ViewModel)
-    func displayError(viewModel: Main.Feed.ViewModel)
-    func deleteFeeds(viewModel: Main.Feed.ViewModel)
+    func displayError(viewModel: Main.Error.ViewModel)
+    func deleteFeeds(viewModel: Main.Feed.Delete)
 }
 
 class MainViewController: UITableViewController, MainDisplayLogic {
@@ -38,7 +38,6 @@ class MainViewController: UITableViewController, MainDisplayLogic {
     }
     
     // MARK: Setup
-    
     private func setup() {
         let viewController = self
         let interactor = MainInteractor()
@@ -67,27 +66,25 @@ class MainViewController: UITableViewController, MainDisplayLogic {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        getFeeds(stringUrl: "https://www.ozodi.org/api/zmkove$pit")
+        getFeeds()
     }
     
-    func getFeeds(stringUrl:String) {
-        let url = URL(string: stringUrl)
-        let request = Main.Feed.Request(url: url!)
-        interactor?.getFeeds(request: request)
+    func getFeeds() {
+        interactor?.getFeeds()
     }
     
-    func displayError(viewModel: Main.Feed.ViewModel) {
-        let alert = UIAlertController(title: "Ошибка", message: viewModel.error, preferredStyle: .alert)
+    func displayError(viewModel: Main.Error.ViewModel) {
+        let alert = UIAlertController(title: "Ошибка", message: viewModel.message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
         present(alert, animated: true, completion: nil)
     }
     
     func displayFeeds(viewModel: Main.Feed.ViewModel) {
-        feeds.insert(viewModel.rssFeed!, at: 0)
+        feeds.insert(viewModel.rssFeed, at: 0)
         self.tableView.insertSections([0], with: .top)
     }
     
-    func deleteFeeds(viewModel: Main.Feed.ViewModel) {
+    func deleteFeeds(viewModel: Main.Feed.Delete) {
         if let feed = feeds.filter({$0.link == viewModel.url}).first,
             let index = feeds.firstIndex(of: feed) {
             feeds.remove(at: index)

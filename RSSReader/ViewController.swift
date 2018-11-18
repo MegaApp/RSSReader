@@ -13,8 +13,8 @@ import RxSwift
 class ViewController: UITableViewController {
 
     fileprivate var disposeBag = DisposeBag()
-    let feedURL = URL(string: "http://khovar.tj/rus/feed/")!
-    let feedURL1 = URL(string: "https://www.vb.kg/?rss")!
+    let feedURL = URL(string: "https://ru.sputnik.kg/export/rss2/archive/index.xml")!
+    let feedURL1 = URL(string: "https://sputnik-tj.com/export/rss2/archive/index.xml")!
     let feedURL2 = URL(string: "https://www.ozodi.org/api/zmkove$pit")!
     var feed = [RSSFeed]()
     
@@ -31,12 +31,9 @@ class ViewController: UITableViewController {
                 self.feed.append(result)
                 let sec = self.tableView.numberOfSections
                 self.tableView.insertSections([sec], with: .bottom)
-            }, onError: { error in
-                let alert = UIAlertController(title: "Ошибка", message: error.localizedDescription, preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-                self.present(alert, animated: true, completion: nil)
-            })
-            .disposed(by: disposeBag)
+        }, onError: { error in
+            print(error.localizedDescription)
+        }).disposed(by: disposeBag)
         
         for u in urls {
             subject.onNext(u)

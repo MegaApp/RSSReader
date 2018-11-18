@@ -15,7 +15,8 @@ import Kingfisher
 
 protocol ResourceDisplayLogic: class {
     func displayRssResource(viewModel: Resource.RssResource.ViewModel)
-    func displayError(viewModel: Resource.RssResource.ViewModel)
+    func displayRssResources(viewModel: [Resource.RssResource.ViewModel])
+    func displayError(viewModel: Resource.Error.ViewModel)
 }
 
 class ResourceViewController: UITableViewController, ResourceDisplayLogic {
@@ -68,27 +69,37 @@ class ResourceViewController: UITableViewController, ResourceDisplayLogic {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        interactor?.getAllResources()
     }
     
     @IBAction func addButton(_ sender: Any) {
-        let request = Resource.RssResource.Request(urlString: textField.text ?? "", name: "", logoUrlString: "")
+        let request = Resource.RssResource.Request(urlString: textField.text ?? "", title: "", logoUrlString: "")
+        textField.text = nil
         interactor?.addRssResource(request: request)
     }
     
+    func displayRssResources(viewModel: [Resource.RssResource.ViewModel]) {
+        resources = viewModel
+        tableView.reloadData()
+    }
+    
     func displayRssResource(viewModel: Resource.RssResource.ViewModel) {
-        textField.text = nil
         resources.insert(viewModel, at: 0)
         tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .bottom)
     }
     
-    func displayError(viewModel: Resource.RssResource.ViewModel) {
-        let alert = UIAlertController(title: "Ошибка", message: viewModel.error, preferredStyle: .alert)
+    func displayError(viewModel: Resource.Error.ViewModel) {
+        let alert = UIAlertController(title: "Ошибка", message: viewModel.message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
         present(alert, animated: true, completion: nil)
     }
 }
 
 extension ResourceViewController {
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return "Каналы"
+    }
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return resources.count
     }
@@ -97,10 +108,10 @@ extension ResourceViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "resourceCell", for: indexPath)
         let resource = resources[indexPath.item]
         cell.textLabel?.text = resource.title
-        
-        if let url = resource.logoUrl {
+        if let urlString = resource.logoUrl,
+            let url = URL(string: urlString) {
             let avatarResource = ImageResource(downloadURL: url)
-            let processor = ResizingImageProcessor(referenceSize: CGSize(width: 100, height: 100), mode: .aspectFill)
+            let processor = ResizingImageProcessor(referenceSize: cell.imageView!.frame.size, mode: .aspectFill)
             cell.imageView?.kf.setImage(with: avatarResource, placeholder: Image(named: "ic_rss"), options: [.processor(processor)])
         } else {
             cell.imageView?.image = Image(named: "ic_rss")
@@ -117,7 +128,7 @@ extension ResourceViewController {
             let resource = self.resources[indexPath.row]
             self.resources.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .bottom)
-            let request = Resource.RssResource.Request(urlString: resource.urlString, name: resource.title, logoUrlString: resource.logoUrl?.absoluteString)
+            let request = Resource.RssResource.Request(urlString: resource.urlString, title: resource.title, logoUrlString: resource.logoUrl)
             self.interactor?.deleteRssResource(request: request)
         })
         return [deleteAction]

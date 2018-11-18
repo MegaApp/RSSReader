@@ -16,6 +16,7 @@ import FeedKit
 
 protocol MainBusinessLogic {
     func getFeeds(request: Main.Feed.Request)
+    func getFeeds()
     func deleteFeeds(request: Main.Feed.Request)
 }
 
@@ -30,6 +31,7 @@ class MainInteractor: MainBusinessLogic, MainDataStore {
     fileprivate var disposeBag = DisposeBag()
     var presenter: MainPresentationLogic?
     var worker: MainWorker?
+    var coreDataWorker: MainCoreDataWorker?
     let subject: PublishSubject<URL>?
     
     init() {
@@ -37,9 +39,12 @@ class MainInteractor: MainBusinessLogic, MainDataStore {
         subject = PublishSubject<URL>()
         subject?.flatMap({self.worker!.getFeeds(url: $0)})
             .observeOn(MainScheduler.instance)
-            .subscribe({event in
-                let response = Main.Feed.Response(event: event, url: nil)
+            .subscribe(onNext: { rssFeed in
+                let response = Main.Feed.Response(feed: rssFeed)
                 self.presenter?.presentFeeds(response: response)
+            }, onError: {error in
+                let response = Main.Error.Response(message: error.localizedDescription)
+                self.presenter?.presentError(response: response)
             })
             .disposed(by: disposeBag)
         setMainData()
@@ -49,8 +54,26 @@ class MainInteractor: MainBusinessLogic, MainDataStore {
         subject?.onNext(request.url)
     }
     
+    func getFeeds() {
+        coreDataWorker = MainCoreDataWorker()
+        coreDataWorker?.getAllRSSChannels()
+            .observeOn(MainScheduler.instance)
+            .subscribe(onNext: { channels in
+                for channel in channels {
+                    if let urlSting = channel.url,
+                        let url = URL(string: urlSting) {
+                        self.subject?.onNext(url)
+                    }
+                }
+            }, onError: { error in
+                let response = Main.Error.Response(message: error.localizedDescription)
+                self.presenter?.presentError(response: response)
+            })
+            .disposed(by: disposeBag)
+    }
+    
     func deleteFeeds(request: Main.Feed.Request) {
-        let response = Main.Feed.Response(event: nil, url: request.url.absoluteString)
+        let response = Main.Feed.Delete(url: request.url.absoluteString)
         self.presenter?.deleteFeeds(response: response)
     }
     

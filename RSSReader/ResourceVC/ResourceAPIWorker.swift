@@ -24,9 +24,8 @@ class ResourceAPIWorker {
                     observer.on(.completed)
                     return
                 }
-                if let urlLink = rssFeed.link,
-                    let title = rssFeed.title {
-                    let response = Resource.RssResource.Response(url:  urlLink, title: title, logoUrl: URL(string: rssFeed.image?.url ?? ""), error: nil)
+                if let title = rssFeed.title {
+                    let response = Resource.RssResource.Response(url: url.absoluteString, title: title, logoUrl: rssFeed.image?.url)
                     observer.onNext(response)
                     observer.on(.completed)
                 } else {

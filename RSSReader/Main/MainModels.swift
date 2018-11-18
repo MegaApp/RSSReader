@@ -22,13 +22,24 @@ enum Main {
             let url: URL
         }
         struct Response {
-            let event: Event<RSSFeed>?
-            let url: String?
+            let feed: RSSFeed
         }
         struct ViewModel {
-            let rssFeed: RSSFeed?
-            let error: String?
-            let url: String?
+            let rssFeed: RSSFeed
+        }
+        
+        struct Delete {
+            let url: String
+        }
+    }
+    
+    enum Error {
+        struct Response {
+            let message: String
+        }
+        
+        struct ViewModel {
+            let message: String
         }
     }
 }

@@ -24,6 +24,7 @@ class MainWorker {
                     observer.on(.completed)
                     return
                 }
+                rssFeed.link = url.absoluteString
                 observer.onNext(rssFeed)
                 observer.on(.completed)
             }
