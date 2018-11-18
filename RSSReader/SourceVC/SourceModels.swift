@@ -12,8 +12,8 @@
 
 import UIKit
 
-enum Resource {
-    enum RssResource {
+enum Source {
+    enum RssSource {
         struct Request {
             let urlString: String
             let title: String
@@ -31,13 +31,13 @@ enum Resource {
         }
     }
     
-    enum RssResources {
+    enum RssSources {
         struct Response {
             let rssChannels: [RSSChannel]
         }
         
         struct ViewModel {
-            let rssChannels: [Resource.RssResource.ViewModel]
+            let rssChannels: [Source.RssSource.ViewModel]
         }
     }
     

@@ -28,7 +28,7 @@ class MainRouter: NSObject, MainRoutingLogic, MainDataPassing {
     
     func routeToResourceVC(segue: UIStoryboardSegue?) {
       if let segue = segue {
-        let destinationVC = segue.destination as! ResourceViewController
+        let destinationVC = segue.destination as! SourceViewController
         var destinationDS = destinationVC.router!.dataStore!
         passDataToSomewhere(source: dataStore!, destination: &destinationDS)
       }
@@ -36,7 +36,7 @@ class MainRouter: NSObject, MainRoutingLogic, MainDataPassing {
     
     // MARK: Passing data
     
-    func passDataToSomewhere(source: MainDataStore, destination: inout ResourceDataStore) {
+    func passDataToSomewhere(source: MainDataStore, destination: inout SourceDataStore) {
       destination.mainDelegate = source.mainDelegate
     }
 }

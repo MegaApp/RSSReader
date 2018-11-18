@@ -11,8 +11,8 @@ import CoreData
 import RxSwift
 import UIKit
 
-class ResourceCoreDataWorker {
-    func addChannel(channel: Resource.RssResource.Request) -> Observable<Resource.RssResource.Response> {
+class SourceCoreDataWorker {
+    func addChannel(channel: Source.RssSource.Request) -> Observable<Source.RssSource.Response> {
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
         return Observable.create {observer in
             if let delegate = appDelegate {
@@ -25,7 +25,7 @@ class ResourceCoreDataWorker {
                 rssChannel.setValue(channel.logoUrlString, forKey: "logo_url")
                 do {
                     try managedContext.save()
-                    let response = Resource.RssResource.Response(url: channel.urlString, title: channel.title, logoUrl: channel.logoUrlString)
+                    let response = Source.RssSource.Response(url: channel.urlString, title: channel.title, logoUrl: channel.logoUrlString)
                     observer.onNext(response)
                     observer.onCompleted()
                 } catch let error as NSError {

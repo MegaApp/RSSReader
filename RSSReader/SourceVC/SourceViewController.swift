@@ -13,17 +13,17 @@
 import UIKit
 import Kingfisher
 
-protocol ResourceDisplayLogic: class {
-    func displayRssResource(viewModel: Resource.RssResource.ViewModel)
-    func displayRssResources(viewModel: [Resource.RssResource.ViewModel])
-    func displayError(viewModel: Resource.Errors.ViewModel)
+protocol SourceDisplayLogic: class {
+    func displayRssResource(viewModel: Source.RssSource.ViewModel)
+    func displayRssResources(viewModel: [Source.RssSource.ViewModel])
+    func displayError(viewModel: Source.Errors.ViewModel)
 }
 
-class ResourceViewController: UITableViewController, ResourceDisplayLogic {
+class SourceViewController: UITableViewController, SourceDisplayLogic {
     
-    var resources = [Resource.RssResource.ViewModel]()
-    var interactor: ResourceBusinessLogic?
-    var router: (NSObjectProtocol & ResourceRoutingLogic & ResourceDataPassing)?
+    var resources = [Source.RssSource.ViewModel]()
+    var interactor: SourceBusinessLogic?
+    var router: (NSObjectProtocol & SourceRoutingLogic & SourceDataPassing)?
     
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var indicator: UIActivityIndicatorView!
@@ -45,9 +45,9 @@ class ResourceViewController: UITableViewController, ResourceDisplayLogic {
     
     private func setup() {
         let viewController = self
-        let interactor = ResourceInteractor()
-        let presenter = ResourcePresenter()
-        let router = ResourceRouter()
+        let interactor = SourceInteractor()
+        let presenter = SourcePresenter()
+        let router = SourceRouter()
         viewController.interactor = interactor
         viewController.router = router
         interactor.presenter = presenter
@@ -77,16 +77,16 @@ class ResourceViewController: UITableViewController, ResourceDisplayLogic {
     @IBAction func addButton(_ sender: UIButton) {
         addButton.isHidden = true
         indicator.startAnimating()
-        let request = Resource.RssResource.Request(urlString: textField.text ?? "", title: "", logoUrlString: "")
+        let request = Source.RssSource.Request(urlString: textField.text ?? "", title: "", logoUrlString: "")
         interactor?.addRssResource(request: request)
     }
     
-    func displayRssResources(viewModel: [Resource.RssResource.ViewModel]) {
+    func displayRssResources(viewModel: [Source.RssSource.ViewModel]) {
         resources = viewModel
         tableView.reloadData()
     }
     
-    func displayRssResource(viewModel: Resource.RssResource.ViewModel) {
+    func displayRssResource(viewModel: Source.RssSource.ViewModel) {
         indicator.stopAnimating()
         addButton.isHidden = false
         textField.text = nil
@@ -94,7 +94,7 @@ class ResourceViewController: UITableViewController, ResourceDisplayLogic {
         tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .bottom)
     }
     
-    func displayError(viewModel: Resource.Errors.ViewModel) {
+    func displayError(viewModel: Source.Errors.ViewModel) {
         indicator.stopAnimating()
         addButton.isHidden = false
         let alert = UIAlertController(title: "Ошибка", message: viewModel.message, preferredStyle: .alert)
@@ -103,7 +103,7 @@ class ResourceViewController: UITableViewController, ResourceDisplayLogic {
     }
 }
 
-extension ResourceViewController {
+extension SourceViewController {
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return resources.count > 0 ? "Источники" : nil
     }
@@ -136,7 +136,7 @@ extension ResourceViewController {
             let resource = self.resources[indexPath.row]
             self.resources.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .bottom)
-            let request = Resource.RssResource.Request(urlString: resource.urlString, title: resource.title, logoUrlString: resource.logoUrl)
+            let request = Source.RssSource.Request(urlString: resource.urlString, title: resource.title, logoUrlString: resource.logoUrl)
             self.interactor?.deleteRssResource(request: request)
         })
         return [deleteAction]

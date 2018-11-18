@@ -13,66 +13,66 @@
 import UIKit
 import RxSwift
 
-protocol ResourceBusinessLogic {
-    func addRssResource(request: Resource.RssResource.Request)
-    func deleteRssResource(request: Resource.RssResource.Request)
+protocol SourceBusinessLogic {
+    func addRssResource(request: Source.RssSource.Request)
+    func deleteRssResource(request: Source.RssSource.Request)
     func getAllResources()
 }
 
-protocol ResourceDataStore {
+protocol SourceDataStore {
     var mainDelegate: MainBusinessLogic? { get set }
 }
 
-class ResourceInteractor: ResourceBusinessLogic, ResourceDataStore {
+class SourceInteractor: SourceBusinessLogic, SourceDataStore {
     
     fileprivate var disposeBag = DisposeBag()
     
     var mainDelegate: MainBusinessLogic?
     
-    var presenter: ResourcePresentationLogic?
-    var apiWorker: ResourceAPIWorker?
-    var coreDataWorker: ResourceCoreDataWorker?
+    var presenter: SourcePresentationLogic?
+    var apiWorker: SourceAPIWorker?
+    var coreDataWorker: SourceCoreDataWorker?
     
     func getAllResources() {
-        coreDataWorker = ResourceCoreDataWorker()
+        coreDataWorker = SourceCoreDataWorker()
         coreDataWorker?.getAllRSSChannels()
             .observeOn(MainScheduler.instance)
             .subscribe(onNext: { channels in
-                let response = Resource.RssResources.Response(rssChannels: channels)
+                let response = Source.RssSources.Response(rssChannels: channels)
                 self.presenter?.presentRssResources(response: response)
             }, onError: { error in
-                let response = Resource.Errors.Response(message: error.localizedDescription)
+                let response = Source.Errors.Response(message: error.localizedDescription)
                 self.presenter?.presentError(response: response)
             })
             .disposed(by: disposeBag)
     }
     
-    func deleteRssResource(request: Resource.RssResource.Request) {
-        coreDataWorker = ResourceCoreDataWorker()
+    func deleteRssResource(request: Source.RssSource.Request) {
+        coreDataWorker = SourceCoreDataWorker()
         coreDataWorker?.deleteData(url: request.urlString)
             .observeOn(MainScheduler.instance)
             .subscribe(onNext: { url in
                 let mainRequest = Main.Feed.Request(url: URL(string: url)!)
                 self.mainDelegate?.deleteFeeds(request: mainRequest)
             }, onError: { error in
-                let response = Resource.Errors.Response(message: error.localizedDescription)
+                let response = Source.Errors.Response(message: error.localizedDescription)
                 self.presenter?.presentError(response: response)
             })
             .disposed(by: disposeBag)
     }
     
-    func addRssResource(request: Resource.RssResource.Request) {
-        apiWorker = ResourceAPIWorker()
-        coreDataWorker = ResourceCoreDataWorker()
+    func addRssResource(request: Source.RssSource.Request) {
+        apiWorker = SourceAPIWorker()
+        coreDataWorker = SourceCoreDataWorker()
         guard let url = URL(string: request.urlString) else {
-            let response = Resource.Errors.Response(message: "Не правельный адрес")
+            let response = Source.Errors.Response(message: "Не правельный адрес")
             self.presenter?.presentError(response: response)
             return
         }
         apiWorker?.chackRssResource(url: url)
             .observeOn(MainScheduler.instance)
-            .flatMap({response  -> Observable<Resource.RssResource.Response> in
-                let request = Resource.RssResource.Request(urlString: response.url, title: response.title, logoUrlString: response.logoUrl)
+            .flatMap({response  -> Observable<Source.RssSource.Response> in
+                let request = Source.RssSource.Request(urlString: response.url, title: response.title, logoUrlString: response.logoUrl)
                 return self.coreDataWorker!.addChannel(channel: request)
             })
             .observeOn(MainScheduler.instance)
@@ -81,7 +81,7 @@ class ResourceInteractor: ResourceBusinessLogic, ResourceDataStore {
                 let mainRequest = Main.Feed.Request(url: URL(string: response.url)!)
                 self.mainDelegate?.getFeeds(request: mainRequest)
             }, onError: { error in
-                let response = Resource.Errors.Response(message: error.localizedDescription)
+                let response = Source.Errors.Response(message: error.localizedDescription)
                 self.presenter?.presentError(response: response)
             })
             .disposed(by: disposeBag)

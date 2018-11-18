@@ -14,8 +14,8 @@ import UIKit
 import RxSwift
 import FeedKit
 
-class ResourceAPIWorker {
-    func chackRssResource(url: URL) -> Observable<Resource.RssResource.Response> {
+class SourceAPIWorker {
+    func chackRssResource(url: URL) -> Observable<Source.RssSource.Response> {
         return Observable.create{ observer in
             let parser = FeedParser(URL: url)
             parser.parseAsync {(result) in
@@ -25,7 +25,7 @@ class ResourceAPIWorker {
                     return
                 }
                 if let title = rssFeed.title {
-                    let response = Resource.RssResource.Response(url: url.absoluteString, title: title, logoUrl: rssFeed.image?.url)
+                    let response = Source.RssSource.Response(url: url.absoluteString, title: title, logoUrl: rssFeed.image?.url)
                     observer.onNext(response)
                     observer.on(.completed)
                 } else {

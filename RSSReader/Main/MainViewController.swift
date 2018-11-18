@@ -51,6 +51,19 @@ class MainViewController: UITableViewController, MainDisplayLogic {
         router.dataStore = interactor
     }
     
+    private func setupUI(){
+        refreshControl = UIRefreshControl()
+        refreshControl?.addTarget(self, action: #selector(handleRefresh(refreshControl:)), for: UIControl.Event.valueChanged)
+        tableView.refreshControl = refreshControl
+        tableView.separatorStyle = .none
+        tableView.estimatedRowHeight = 314
+        tableView.rowHeight = UITableView.automaticDimension
+        
+        if #available(iOS 11.0, *) {
+            self.navigationController?.navigationBar.prefersLargeTitles = true
+        }
+    }
+    
     // MARK: Routing
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -66,16 +79,7 @@ class MainViewController: UITableViewController, MainDisplayLogic {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        refreshControl = UIRefreshControl()
-        refreshControl?.addTarget(self, action: #selector(handleRefresh(refreshControl:)), for: UIControl.Event.valueChanged)
-        tableView.refreshControl = refreshControl
-        tableView.separatorStyle = .none
-        tableView.estimatedRowHeight = 314
-        tableView.rowHeight = UITableView.automaticDimension
-        
-        if #available(iOS 11.0, *) {
-            self.navigationController?.navigationBar.prefersLargeTitles = true
-        }
+        setupUI()
         getFeeds()
     }
     

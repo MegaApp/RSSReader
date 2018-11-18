@@ -12,15 +12,15 @@
 
 import UIKit
 
-@objc protocol ResourceRoutingLogic {
+@objc protocol SourceRoutingLogic {
     //func routeToSomewhere(segue: UIStoryboardSegue?)
 }
 
-protocol ResourceDataPassing {
-    var dataStore: ResourceDataStore? { get }
+protocol SourceDataPassing {
+    var dataStore: SourceDataStore? { get }
 }
 
-class ResourceRouter: NSObject, ResourceRoutingLogic, ResourceDataPassing {
-    weak var viewController: ResourceViewController?
-    var dataStore: ResourceDataStore?
+class SourceRouter: NSObject, SourceRoutingLogic, SourceDataPassing {
+    weak var viewController: SourceViewController?
+    var dataStore: SourceDataStore?
 }
