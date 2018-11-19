@@ -21,7 +21,7 @@ protocol DetailDisplayLogic: class {
 class DetailViewController: UIViewController, DetailDisplayLogic {
     
     var interactor: DetailBusinessLogic?
-    var router: (NSObjectProtocol & DetailDataPassing)?
+    var router: (NSObjectProtocol & DetailRoutingLogic & DetailDataPassing)?
     
     // MARK: Object lifecycle
     
@@ -54,7 +54,7 @@ class DetailViewController: UIViewController, DetailDisplayLogic {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var dateLabel: UILabel!
-    
+    @IBOutlet weak var readMoreButton: UIButton!
     
     // MARK: View lifecycle
     
@@ -63,10 +63,16 @@ class DetailViewController: UIViewController, DetailDisplayLogic {
         interactor?.getItem()
     }
     
+    @IBAction func readMoreButton(_ sender: Any) {
+        router?.openLinkInBrowser()
+    }
+    
     func displayItem(viewModel: Detail.Item.ViewModel) {
+        self.title = viewModel.title?.string
         titleLabel.attributedText = viewModel.title
         descriptionLabel.text = viewModel.description
         dateLabel.text = viewModel.pubDate
+        readMoreButton.isHidden = (viewModel.link ?? "").isEmpty
         if let urlString = viewModel.imageUrl,
             let url = URL(string: urlString) {
             let imageResource = ImageResource(downloadURL: url)

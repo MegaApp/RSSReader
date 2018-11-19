@@ -10,7 +10,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--RSS Reader-->
+        <!--Лента-->
         <scene sceneID="mhd-qe-WzU">
             <objects>
                 <tableViewController id="ISc-kr-rSs" customClass="MainViewController" customModule="RSSReader" customModuleProvider="target" sceneMemberID="viewController">
@@ -86,7 +86,7 @@
                             <outlet property="delegate" destination="ISc-kr-rSs" id="ZhX-qg-J3l"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="RSS Reader" id="Hk6-ac-geo">
+                    <navigationItem key="navigationItem" title="Лента" id="Hk6-ac-geo">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="vxb-zW-maq">
                             <connections>
                                 <segue destination="vRG-YJ-ct1" kind="show" identifier="SourceVC" id="bEz-Ng-3Se"/>
@@ -135,8 +135,18 @@
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yq1-LS-5Hz">
+                                        <rect key="frame" x="16" y="312.5" width="343" height="33"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <state key="normal" title="читать дальше...">
+                                            <color key="titleColor" red="0.91469460729999996" green="0.6044209599" blue="0.24678683279999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="readMoreButton:" destination="UJA-6F-53z" eventType="touchUpInside" id="gvn-HH-oXJ"/>
+                                        </connections>
+                                    </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lxf-AK-wfn">
-                                        <rect key="frame" x="20" y="336.5" width="339" height="20.5"/>
+                                        <rect key="frame" x="20" y="349.5" width="339" height="20.5"/>
                                         <fontDescription key="fontDescription" type="italicSystem" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
@@ -149,14 +159,17 @@
                                     <constraint firstItem="Lxf-AK-wfn" firstAttribute="leading" relation="lessThanOrEqual" secondItem="v2v-fD-1Uq" secondAttribute="leading" constant="20" symbolic="YES" id="7JA-yv-pBv"/>
                                     <constraint firstItem="b8o-yy-Fxp" firstAttribute="leading" secondItem="v2v-fD-1Uq" secondAttribute="leading" constant="16" id="8Z2-tk-7BS"/>
                                     <constraint firstAttribute="bottom" secondItem="Lxf-AK-wfn" secondAttribute="bottom" constant="16" id="8e3-7d-3KC"/>
+                                    <constraint firstItem="yq1-LS-5Hz" firstAttribute="top" secondItem="1p0-X6-BLn" secondAttribute="bottom" id="FUj-Th-bEp"/>
                                     <constraint firstItem="gxP-X6-maf" firstAttribute="top" secondItem="v2v-fD-1Uq" secondAttribute="top" id="Hfg-v4-Ftm"/>
+                                    <constraint firstItem="yq1-LS-5Hz" firstAttribute="leading" secondItem="v2v-fD-1Uq" secondAttribute="leading" constant="16" id="Trw-Ii-CCN"/>
                                     <constraint firstItem="b8o-yy-Fxp" firstAttribute="top" secondItem="gxP-X6-maf" secondAttribute="bottom" constant="-12" id="VN7-SZ-SXr"/>
+                                    <constraint firstItem="Lxf-AK-wfn" firstAttribute="top" secondItem="yq1-LS-5Hz" secondAttribute="bottom" constant="4" id="X0p-IO-KVu"/>
                                     <constraint firstAttribute="trailing" secondItem="1p0-X6-BLn" secondAttribute="trailing" constant="16" id="dbS-gj-JG0"/>
                                     <constraint firstAttribute="trailing" secondItem="Lxf-AK-wfn" secondAttribute="trailing" constant="16" id="fCP-9t-ePp"/>
-                                    <constraint firstItem="Lxf-AK-wfn" firstAttribute="top" secondItem="1p0-X6-BLn" secondAttribute="bottom" constant="24" id="ggW-KX-L9G"/>
                                     <constraint firstItem="gxP-X6-maf" firstAttribute="centerX" secondItem="v2v-fD-1Uq" secondAttribute="centerX" id="pND-gY-ppq"/>
                                     <constraint firstItem="gxP-X6-maf" firstAttribute="leading" secondItem="v2v-fD-1Uq" secondAttribute="leading" id="pjT-TX-7Hd"/>
                                     <constraint firstAttribute="trailing" secondItem="gxP-X6-maf" secondAttribute="trailing" id="qwR-SJ-igR"/>
+                                    <constraint firstAttribute="trailing" secondItem="yq1-LS-5Hz" secondAttribute="trailing" constant="16" id="voA-0l-iNR"/>
                                 </constraints>
                             </scrollView>
                         </subviews>
@@ -176,6 +189,7 @@
                         <outlet property="dateLabel" destination="Lxf-AK-wfn" id="pQn-aC-YlP"/>
                         <outlet property="descriptionLabel" destination="1p0-X6-BLn" id="8ZI-Tt-bnO"/>
                         <outlet property="imageView" destination="gxP-X6-maf" id="yzp-re-xO1"/>
+                        <outlet property="readMoreButton" destination="yq1-LS-5Hz" id="7ig-0Q-HRe"/>
                         <outlet property="titleLabel" destination="b8o-yy-Fxp" id="73p-t2-pcM"/>
                     </connections>
                 </viewController>
@@ -183,10 +197,10 @@
             </objects>
             <point key="canvasLocation" x="2445.5999999999999" y="483.50824587706148"/>
         </scene>
-        <!--Sources-->
+        <!--Источники-->
         <scene sceneID="8P4-f7-dsM">
             <objects>
-                <tableViewController storyboardIdentifier="SourceViewController" title="Sources" useStoryboardIdentifierAsRestorationIdentifier="YES" id="vRG-YJ-ct1" customClass="SourceViewController" customModule="RSSReader" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="SourceViewController" title="Источники" useStoryboardIdentifierAsRestorationIdentifier="YES" id="vRG-YJ-ct1" customClass="SourceViewController" customModule="RSSReader" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="uXE-WO-tio">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

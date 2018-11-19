@@ -19,15 +19,21 @@ protocol DetailBusinessLogic {
 
 protocol DetailDataStore {
     var item: RSSFeedItem? { get set }
+    var feedUrl: URL? { get set }
 }
 
 class DetailInteractor: DetailBusinessLogic, DetailDataStore {
+
     var item: RSSFeedItem?
-    
+    var feedUrl: URL?
     var presenter: DetailPresentationLogic?
     
     func getItem() {
         let response = Detail.Item.Response(item: item)
+        if let urlString = item?.link,
+            let url = URL(string: urlString){
+            feedUrl = url
+        }
         presenter?.presentItem(response: response)
     }
 }

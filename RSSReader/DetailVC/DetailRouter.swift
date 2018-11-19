@@ -12,11 +12,26 @@
 
 import UIKit
 
+@objc protocol DetailRoutingLogic {
+    func openLinkInBrowser()
+}
+
 protocol DetailDataPassing {
     var dataStore: DetailDataStore? { get }
 }
 
-class DetailRouter: NSObject, DetailDataPassing {
+class DetailRouter: NSObject, DetailRoutingLogic, DetailDataPassing {
     weak var viewController: DetailViewController?
     var dataStore: DetailDataStore?
+    
+    func openLinkInBrowser(){
+        guard let url = dataStore?.feedUrl else {
+            return
+        }
+        if #available(iOS 10.0, *) {
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        } else {
+            UIApplication.shared.openURL(url)
+        }
+    }
 }
