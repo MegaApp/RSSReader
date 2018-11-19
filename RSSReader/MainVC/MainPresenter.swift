@@ -16,6 +16,7 @@ protocol MainPresentationLogic {
     func presentFeeds(response: Main.Feed.Response)
     func presentError(response: Main.Errors.Response)
     func deleteFeeds(response: Main.Feed.Delete)
+    func routeToSourceVC()
 }
 
 class MainPresenter: MainPresentationLogic {
@@ -35,5 +36,9 @@ class MainPresenter: MainPresentationLogic {
     func deleteFeeds(response: Main.Feed.Delete) {
         let viewModel = Main.Feed.Delete(url: response.url)
         viewController?.deleteFeeds(viewModel: viewModel)
+    }
+    
+    func routeToSourceVC() {
+        viewController?.routToSourceVC()
     }
 }

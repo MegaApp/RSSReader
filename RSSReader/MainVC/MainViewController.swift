@@ -17,6 +17,7 @@ protocol MainDisplayLogic: class {
     func displayFeeds(viewModel: Main.Feed.ViewModel)
     func displayError(viewModel: Main.Errors.ViewModel)
     func deleteFeeds(viewModel: Main.Feed.Delete)
+    func routToSourceVC()
 }
 
 class MainViewController: UITableViewController, MainDisplayLogic {
@@ -114,6 +115,11 @@ class MainViewController: UITableViewController, MainDisplayLogic {
             tableView.deleteSections([index], with: .bottom)
         }
     }
+    
+    func routToSourceVC() {
+        refreshControl?.endRefreshing()
+        router?.routeToSourceVC(segue: nil)
+    }
 }
 
 extension MainViewController {
@@ -133,5 +139,13 @@ extension MainViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! MainTableViewCell
         cell.update(item: feeds[indexPath.section].items?[indexPath.item])
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        guard let item = feeds[indexPath.section].items?[indexPath.item] else {
+            return indexPath
+        }
+        interactor?.setItemToPass(item: item)
+        return indexPath
     }
 }

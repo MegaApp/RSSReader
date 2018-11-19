@@ -18,14 +18,16 @@ protocol MainBusinessLogic {
     func getFeeds(request: Main.Feed.Request)
     func getFeeds()
     func deleteFeeds(request: Main.Feed.Request)
+    func setItemToPass(item: RSSFeedItem)
 }
 
 protocol MainDataStore {
     var mainDelegate: MainBusinessLogic? { get set }
+    var item: RSSFeedItem? { get set }
 }
 
 class MainInteractor: MainBusinessLogic, MainDataStore {
-    
+    var item: RSSFeedItem?
     var mainDelegate: MainBusinessLogic?
 
     fileprivate var disposeBag = DisposeBag()
@@ -59,6 +61,9 @@ class MainInteractor: MainBusinessLogic, MainDataStore {
         coreDataWorker?.getAllRSSChannels()
             .observeOn(MainScheduler.instance)
             .subscribe(onNext: { channels in
+                if channels.count == 0 {
+                    self.presenter?.routeToSourceVC()
+                }
                 for channel in channels {
                     if let urlSting = channel.url,
                         let url = URL(string: urlSting) {
@@ -79,5 +84,9 @@ class MainInteractor: MainBusinessLogic, MainDataStore {
     
     func setMainData() {
         mainDelegate = self
+    }
+    
+    func setItemToPass(item: RSSFeedItem) {
+        self.item = item
     }
 }
