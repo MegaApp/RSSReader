@@ -33,6 +33,16 @@ enum Main {
         }
     }
     
+    enum Feeds {
+        struct Response {
+            let feeds: [RSSFeed]
+        }
+        
+        struct ViewModel {
+            let feeds: [RSSFeed]
+        }
+    }
+    
     enum Errors {
         struct Response {
             let message: String

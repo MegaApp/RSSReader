@@ -32,6 +32,6 @@ class MainCoreDataWorker {
                 observer.onCompleted()
             }
             return Disposables.create()
-            }.subscribeOn(ConcurrentDispatchQueueScheduler(qos: .utility))
+        }.subscribeOn(ConcurrentDispatchQueueScheduler(qos: .utility))
     }
 }

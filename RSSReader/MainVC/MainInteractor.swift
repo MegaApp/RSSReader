@@ -43,7 +43,7 @@ class MainInteractor: MainBusinessLogic, MainDataStore {
             .observeOn(MainScheduler.instance)
             .subscribe(onNext: { rssFeed in
                 let response = Main.Feed.Response(feed: rssFeed)
-                self.presenter?.presentFeeds(response: response)
+                self.presenter?.presentFeed(response: response)
             }, onError: {error in
                 let response = Main.Errors.Response(message: error.localizedDescription)
                 self.presenter?.presentError(response: response)
@@ -63,14 +63,27 @@ class MainInteractor: MainBusinessLogic, MainDataStore {
             .subscribe(onNext: { channels in
                 if channels.count == 0 {
                     self.presenter?.routeToSourceVC()
+                    return
                 }
-                for channel in channels {
-                    if let urlSting = channel.url,
-                        let url = URL(string: urlSting) {
-                        self.subject?.onNext(url)
-                    }
-                }
+                self.getFeeds(channels: channels)
             }, onError: { error in
+                let response = Main.Errors.Response(message: error.localizedDescription)
+                self.presenter?.presentError(response: response)
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    func getFeeds(channels :[RSSChannel]) {
+        Observable.from(channels)
+            .filter({$0.url != nil})
+            .map({URL(string: $0.url!)!})
+            .flatMap({self.worker!.getFeeds(url: $0)})
+            .toArray()
+            .observeOn(MainScheduler.instance)
+            .subscribe(onNext: { feeds in
+                let response = Main.Feeds.Response(feeds: feeds)
+                self.presenter?.presentFeeds(response: response)
+            }, onError: {error in
                 let response = Main.Errors.Response(message: error.localizedDescription)
                 self.presenter?.presentError(response: response)
             })
@@ -79,7 +92,7 @@ class MainInteractor: MainBusinessLogic, MainDataStore {
     
     func deleteFeeds(request: Main.Feed.Request) {
         let response = Main.Feed.Delete(url: request.url.absoluteString)
-        self.presenter?.deleteFeeds(response: response)
+        self.presenter?.deleteFeed(response: response)
     }
     
     func setMainData() {

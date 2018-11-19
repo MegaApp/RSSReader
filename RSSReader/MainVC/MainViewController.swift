@@ -14,9 +14,10 @@ import UIKit
 import FeedKit
 
 protocol MainDisplayLogic: class {
-    func displayFeeds(viewModel: Main.Feed.ViewModel)
+    func displayFeed(viewModel: Main.Feed.ViewModel)
+    func displayFeeds(viewModel: Main.Feeds.ViewModel)
     func displayError(viewModel: Main.Errors.ViewModel)
-    func deleteFeeds(viewModel: Main.Feed.Delete)
+    func deleteFeed(viewModel: Main.Feed.Delete)
     func routToSourceVC()
 }
 
@@ -102,13 +103,19 @@ class MainViewController: UITableViewController, MainDisplayLogic {
         present(alert, animated: true, completion: nil)
     }
     
-    func displayFeeds(viewModel: Main.Feed.ViewModel) {
+    func displayFeed(viewModel: Main.Feed.ViewModel) {
         refreshControl?.endRefreshing()
         feeds.insert(viewModel.rssFeed, at: 0)
         self.tableView.insertSections([0], with: .top)
     }
     
-    func deleteFeeds(viewModel: Main.Feed.Delete) {
+    func displayFeeds(viewModel: Main.Feeds.ViewModel) {
+        refreshControl?.endRefreshing()
+        feeds = viewModel.feeds
+        self.tableView.reloadData()
+    }
+    
+    func deleteFeed(viewModel: Main.Feed.Delete) {
         if let feed = feeds.filter({$0.link == viewModel.url}).first,
             let index = feeds.firstIndex(of: feed) {
             feeds.remove(at: index)

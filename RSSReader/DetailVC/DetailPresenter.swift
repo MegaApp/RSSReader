@@ -21,11 +21,25 @@ class DetailPresenter: DetailPresentationLogic {
     
     func presentItem(response: Detail.Item.Response) {
         guard let item = response.item else {
-            let viewModel = Detail.Item.ViewModel(item: nil, error: "Ой! Что то пошло не так")
+            var viewModel = Detail.Item.ViewModel()
+            viewModel.error = "Ой! Что то пошло не так"
             viewController?.displayError(viewModel: viewModel)
             return
         }
-        let viewModel = Detail.Item.ViewModel(item: item, error: nil)
+        var viewModel = Detail.Item.ViewModel()
+        let title = item.title ?? ""
+        let attribute = NSMutableAttributedString(string: title)
+        let range = (title as NSString).range(of: title)
+        attribute.addAttribute(NSAttributedString.Key.backgroundColor, value: #colorLiteral(red: 0.9674748778, green: 0.5865281224, blue: 0.1175738797, alpha: 1), range: range)
+        viewModel.title = attribute
+        viewModel.imageUrl = item.enclosure?.attributes?.url
+        viewModel.description = item.description ?? ""
+        viewModel.link = item.link
+        if let date = item.pubDate {
+            let dateFormatterPrint = DateFormatter()
+            dateFormatterPrint.dateFormat = "HH:mm (dd MMM yyyy)"
+            viewModel.pubDate = dateFormatterPrint.string(from: date)
+        }
         viewController?.displayItem(viewModel: viewModel)
     }
 }

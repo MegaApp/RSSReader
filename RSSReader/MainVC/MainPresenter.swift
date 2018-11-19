@@ -13,18 +13,23 @@
 import UIKit
 
 protocol MainPresentationLogic {
-    func presentFeeds(response: Main.Feed.Response)
+    func presentFeed(response: Main.Feed.Response)
+    func presentFeeds(response: Main.Feeds.Response)
     func presentError(response: Main.Errors.Response)
-    func deleteFeeds(response: Main.Feed.Delete)
+    func deleteFeed(response: Main.Feed.Delete)
     func routeToSourceVC()
 }
 
 class MainPresenter: MainPresentationLogic {
-    
     weak var viewController: MainDisplayLogic?
     
-    func presentFeeds(response: Main.Feed.Response) {
+    func presentFeed(response: Main.Feed.Response) {
         let viewModel = Main.Feed.ViewModel(rssFeed: response.feed)
+        viewController?.displayFeed(viewModel: viewModel)
+    }
+    
+    func presentFeeds(response: Main.Feeds.Response) {
+        let viewModel = Main.Feeds.ViewModel(feeds: response.feeds)
         viewController?.displayFeeds(viewModel: viewModel)
     }
     
@@ -33,9 +38,9 @@ class MainPresenter: MainPresentationLogic {
         viewController?.displayError(viewModel: viewModel)
     }
     
-    func deleteFeeds(response: Main.Feed.Delete) {
+    func deleteFeed(response: Main.Feed.Delete) {
         let viewModel = Main.Feed.Delete(url: response.url)
-        viewController?.deleteFeeds(viewModel: viewModel)
+        viewController?.deleteFeed(viewModel: viewModel)
     }
     
     func routeToSourceVC() {

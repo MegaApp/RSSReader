@@ -64,22 +64,10 @@ class DetailViewController: UIViewController, DetailDisplayLogic {
     }
     
     func displayItem(viewModel: Detail.Item.ViewModel) {
-        let title = viewModel.item?.title ?? ""
-        self.title = title
-        let attribute = NSMutableAttributedString(string: title)
-        let range = (title as NSString).range(of: title)
-        attribute.addAttribute(NSAttributedString.Key.backgroundColor, value: #colorLiteral(red: 0.9674748778, green: 0.5865281224, blue: 0.1175738797, alpha: 1), range: range)
-        titleLabel.attributedText = attribute
-        descriptionLabel.text = viewModel.item?.description ?? ""
-        
-        let dateFormatterPrint = DateFormatter()
-        dateFormatterPrint.dateFormat = "HH:mm (dd MMM yyyy)"
-        
-        guard let date = viewModel.item?.pubDate else {
-            return
-        }
-        dateLabel.text = dateFormatterPrint.string(from: date)
-        if let urlString = viewModel.item?.enclosure?.attributes?.url,
+        titleLabel.attributedText = viewModel.title
+        descriptionLabel.text = viewModel.description
+        dateLabel.text = viewModel.pubDate
+        if let urlString = viewModel.imageUrl,
             let url = URL(string: urlString) {
             let imageResource = ImageResource(downloadURL: url)
             imageView.kf.setImage(with: imageResource, placeholder: Image(named: "picture"))

@@ -19,8 +19,12 @@ enum Detail {
             let item: RSSFeedItem?
         }
         struct ViewModel {
-            let item: RSSFeedItem?
-            let error: String?
+            var title: NSAttributedString?
+            var description: String?
+            var imageUrl: String?
+            var pubDate: String?
+            var link: String?
+            var error: String?
         }
     }
 }
