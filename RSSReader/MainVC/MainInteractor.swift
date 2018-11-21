@@ -30,7 +30,7 @@ class MainInteractor: MainBusinessLogic, MainDataStore {
     var item: RSSFeedItem?
     var mainDelegate: MainBusinessLogic?
 
-    fileprivate var disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
     var presenter: MainPresentationLogic?
     var worker: MainWorker?
     var coreDataWorker: MainCoreDataWorker?

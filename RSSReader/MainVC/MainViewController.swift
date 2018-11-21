@@ -23,8 +23,8 @@ protocol MainDisplayLogic: class {
 
 class MainViewController: UITableViewController, MainDisplayLogic {
     
-    var feeds = [RSSFeed]()
-    var interactor: MainBusinessLogic?
+    private var feeds = [RSSFeed]()
+    private var interactor: MainBusinessLogic?
     var router: (NSObjectProtocol & MainRoutingLogic & MainDataPassing)?
     
     // MARK: Object lifecycle

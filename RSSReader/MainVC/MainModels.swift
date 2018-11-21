@@ -15,8 +15,6 @@ import RxSwift
 import FeedKit
 
 enum Main {
-    // MARK: Use cases
-    
     enum Feed {
         struct Request {
             let url: URL

@@ -21,9 +21,9 @@ protocol SourceDisplayLogic: class {
 
 class SourceViewController: UITableViewController, SourceDisplayLogic {
     
-    var resources = [Source.RssSource.ViewModel]()
-    var interactor: SourceBusinessLogic?
-    var router: (NSObjectProtocol & SourceRoutingLogic & SourceDataPassing)?
+    private var resources = [Source.RssSource.ViewModel]()
+    private var interactor: SourceBusinessLogic?
+    var router: (NSObjectProtocol & SourceDataPassing)?
     
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var indicator: UIActivityIndicatorView!

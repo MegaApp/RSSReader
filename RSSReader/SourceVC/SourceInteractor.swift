@@ -25,10 +25,8 @@ protocol SourceDataStore {
 
 class SourceInteractor: SourceBusinessLogic, SourceDataStore {
     
-    fileprivate var disposeBag = DisposeBag()
-    
+    private let disposeBag = DisposeBag()
     var mainDelegate: MainBusinessLogic?
-    
     var presenter: SourcePresentationLogic?
     var apiWorker: SourceAPIWorker?
     var coreDataWorker: SourceCoreDataWorker?
