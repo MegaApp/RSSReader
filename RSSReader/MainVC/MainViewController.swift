@@ -62,7 +62,7 @@ class MainViewController: UITableViewController, MainDisplayLogic {
         tableView.rowHeight = UITableView.automaticDimension
         
         if #available(iOS 11.0, *) {
-            self.navigationController?.navigationBar.prefersLargeTitles = true
+            navigationController?.navigationBar.prefersLargeTitles = true
         }
     }
     
@@ -106,13 +106,13 @@ class MainViewController: UITableViewController, MainDisplayLogic {
     func displayFeed(viewModel: Main.Feed.ViewModel) {
         refreshControl?.endRefreshing()
         feeds.insert(viewModel.rssFeed, at: 0)
-        self.tableView.insertSections([0], with: .top)
+        tableView.insertSections([0], with: .top)
     }
     
     func displayFeeds(viewModel: Main.Feeds.ViewModel) {
         refreshControl?.endRefreshing()
         feeds = viewModel.feeds
-        self.tableView.reloadData()
+        tableView.reloadData()
     }
     
     func deleteFeed(viewModel: Main.Feed.Delete) {

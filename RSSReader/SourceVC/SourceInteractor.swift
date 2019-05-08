@@ -35,12 +35,12 @@ class SourceInteractor: SourceBusinessLogic, SourceDataStore {
         coreDataWorker = SourceCoreDataWorker()
         coreDataWorker?.getAllRSSChannels()
             .observeOn(MainScheduler.instance)
-            .subscribe(onNext: { channels in
+            .subscribe(onNext: {[weak self] channels in
                 let response = Source.RssSources.Response(rssChannels: channels)
-                self.presenter?.presentRssResources(response: response)
-            }, onError: { error in
+                self?.presenter?.presentRssResources(response: response)
+            }, onError: {[weak self] error in
                 let response = Source.Errors.Response(message: error.localizedDescription)
-                self.presenter?.presentError(response: response)
+                self?.presenter?.presentError(response: response)
             })
             .disposed(by: disposeBag)
     }
@@ -49,12 +49,12 @@ class SourceInteractor: SourceBusinessLogic, SourceDataStore {
         coreDataWorker = SourceCoreDataWorker()
         coreDataWorker?.deleteData(url: request.urlString)
             .observeOn(MainScheduler.instance)
-            .subscribe(onNext: { url in
+            .subscribe(onNext: {[weak self] url in
                 let mainRequest = Main.Feed.Request(url: URL(string: url)!)
-                self.mainDelegate?.deleteFeeds(request: mainRequest)
-            }, onError: { error in
+                self?.mainDelegate?.deleteFeeds(request: mainRequest)
+            }, onError: {[weak self] error in
                 let response = Source.Errors.Response(message: error.localizedDescription)
-                self.presenter?.presentError(response: response)
+                self?.presenter?.presentError(response: response)
             })
             .disposed(by: disposeBag)
     }
@@ -64,7 +64,7 @@ class SourceInteractor: SourceBusinessLogic, SourceDataStore {
         coreDataWorker = SourceCoreDataWorker()
         guard let url = URL(string: request.urlString) else {
             let response = Source.Errors.Response(message: "Не правельный адрес")
-            self.presenter?.presentError(response: response)
+            presenter?.presentError(response: response)
             return
         }
         apiWorker?.chackRssResource(url: url)
@@ -74,13 +74,13 @@ class SourceInteractor: SourceBusinessLogic, SourceDataStore {
                 return self.coreDataWorker!.addChannel(channel: request)
             })
             .observeOn(MainScheduler.instance)
-            .subscribe(onNext: { response in
-                self.presenter?.presentRssResource(response: response)
+            .subscribe(onNext: {[weak self] response in
+                self?.presenter?.presentRssResource(response: response)
                 let mainRequest = Main.Feed.Request(url: URL(string: response.url)!)
-                self.mainDelegate?.getFeeds(request: mainRequest)
-            }, onError: { error in
+                self?.mainDelegate?.getFeeds(request: mainRequest)
+            }, onError: {[weak self] error in
                 let response = Source.Errors.Response(message: error.localizedDescription)
-                self.presenter?.presentError(response: response)
+                self?.presenter?.presentError(response: response)
             })
             .disposed(by: disposeBag)
     }

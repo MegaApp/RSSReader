@@ -68,7 +68,7 @@ class DetailViewController: UIViewController, DetailDisplayLogic {
     }
     
     func displayItem(viewModel: Detail.Item.ViewModel) {
-        self.title = viewModel.title?.string
+        title = viewModel.title?.string
         titleLabel.attributedText = viewModel.title
         descriptionLabel.text = viewModel.description
         dateLabel.text = viewModel.pubDate

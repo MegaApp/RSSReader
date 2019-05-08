@@ -132,12 +132,13 @@ extension SourceViewController {
     }
     
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        let deleteAction = UITableViewRowAction(style: .destructive, title: "Удалить", handler: { (action, indexPath) in
-            let resource = self.resources[indexPath.row]
-            self.resources.remove(at: indexPath.row)
+        let deleteAction = UITableViewRowAction(style: .destructive, title: "Удалить", handler: {[weak self] (action, indexPath) in
+            guard let _self = self else {return}
+            let resource = _self.resources[indexPath.row]
+            _self.resources.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .bottom)
             let request = Source.RssSource.Request(urlString: resource.urlString, title: resource.title, logoUrlString: resource.logoUrl)
-            self.interactor?.deleteRssResource(request: request)
+            _self.interactor?.deleteRssResource(request: request)
         })
         return [deleteAction]
     }

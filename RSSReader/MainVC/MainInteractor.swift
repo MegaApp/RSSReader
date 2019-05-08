@@ -41,12 +41,12 @@ class MainInteractor: MainBusinessLogic, MainDataStore {
         subject = PublishSubject<URL>()
         subject?.flatMap({self.worker!.getFeeds(url: $0)})
             .observeOn(MainScheduler.instance)
-            .subscribe(onNext: { rssFeed in
+            .subscribe(onNext: {[weak self] rssFeed in
                 let response = Main.Feed.Response(feed: rssFeed)
-                self.presenter?.presentFeed(response: response)
-            }, onError: {error in
+                self?.presenter?.presentFeed(response: response)
+            }, onError: {[weak self] error in
                 let response = Main.Errors.Response(message: error.localizedDescription)
-                self.presenter?.presentError(response: response)
+                self?.presenter?.presentError(response: response)
             })
             .disposed(by: disposeBag)
         setMainData()
@@ -60,12 +60,12 @@ class MainInteractor: MainBusinessLogic, MainDataStore {
         coreDataWorker = MainCoreDataWorker()
         coreDataWorker?.getAllRSSChannels()
             .observeOn(MainScheduler.instance)
-            .subscribe(onNext: { channels in
+            .subscribe(onNext: {[weak self] channels in
                 if channels.count == 0 {
-                    self.presenter?.routeToSourceVC()
+                    self?.presenter?.routeToSourceVC()
                     return
                 }
-                self.getFeeds(channels: channels)
+                self?.getFeeds(channels: channels)
             }, onError: { error in
                 let response = Main.Errors.Response(message: error.localizedDescription)
                 self.presenter?.presentError(response: response)
@@ -80,19 +80,19 @@ class MainInteractor: MainBusinessLogic, MainDataStore {
             .flatMap({self.worker!.getFeeds(url: $0)})
             .toArray()
             .observeOn(MainScheduler.instance)
-            .subscribe(onNext: { feeds in
+            .subscribe(onNext: {[weak self]  feeds in
                 let response = Main.Feeds.Response(feeds: feeds)
-                self.presenter?.presentFeeds(response: response)
-            }, onError: {error in
+                self?.presenter?.presentFeeds(response: response)
+            }, onError: {[weak self] error in
                 let response = Main.Errors.Response(message: error.localizedDescription)
-                self.presenter?.presentError(response: response)
+                self?.presenter?.presentError(response: response)
             })
             .disposed(by: disposeBag)
     }
     
     func deleteFeeds(request: Main.Feed.Request) {
         let response = Main.Feed.Delete(url: request.url.absoluteString)
-        self.presenter?.deleteFeed(response: response)
+        presenter?.deleteFeed(response: response)
     }
     
     func setMainData() {
